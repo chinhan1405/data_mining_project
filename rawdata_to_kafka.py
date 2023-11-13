@@ -19,15 +19,14 @@ def send_data():
 
 if __name__ == '__main__':
 
-    # import threading
+    import threading
 
-    # def set_interval(func, sec):
-    #     def func_wrapper():
-    #         set_interval(func, sec)
-    #         func()
-    #     t = threading.Timer(sec, func_wrapper)
-    #     t.start()
-    #     return t
+    def set_interval(func, sec):
+        def func_wrapper():
+            set_interval(func, sec)
+            func()
+        t = threading.Timer(sec, func_wrapper)
+        t.start()
+        return t
 
-    # set_interval(send_data, 5)
-    send_data()
+    set_interval(send_data, 5)
