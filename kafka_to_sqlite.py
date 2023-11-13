@@ -30,6 +30,7 @@ if __name__ == '__main__':
                 data_temp[i].get('TotalRecovered'),
                 datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             ])
+        print('Data inserted into database')
 
-    consumer = KafkaReceiver('localhost:9092', 'covid19_raw_data')
+    consumer = KafkaReceiver('localhost:9092', 'covid19_stream_data')
     consumer.receive_data(insert_data)
