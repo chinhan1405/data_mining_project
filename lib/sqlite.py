@@ -46,30 +46,30 @@ class Sqlite:
 
 if __name__ == '__main__':
     conn = Sqlite('covid19.db')
+    
+    conn.drop_table('Countries')
 
     conn.create_table('Countries', 
         'Country NVARCHAR(50)', 
-        'CountryCode VARCHAR(2)', 
-        'Slug VARCHAR(50)', 
+        'CountryCode VARCHAR(2) NOT NULL',
         'NewConfirmed INT', 
         'TotalConfirmed INT', 
-        'NewDeaths INT', 
-        'TotalDeaths INT', 
-        'NewRecovered INT', 
-        'TotalRecovered INT', 
-        'Date TEXT',
-        'PRIMARY KEY (CountryCode, Date)'
+        # 'NewDeaths INT', 
+        # 'TotalDeaths INT', 
+        # 'NewRecovered INT', 
+        # 'TotalRecovered INT', 
+        'Date TEXT NOT NULL'
     )
 
-    conn.create_table('Global',
-        'DateTime PRIMARY KEY',
-        'NewConfirmed INT',
-        'TotalConfirmed INT',
-        'NewDeaths INT',
-        'TotalDeaths INT',
-        'NewRecovered INT',
-        'TotalRecovered INT'
-    )
+    # conn.create_table('Global',
+    #     'DateTime PRIMARY KEY',
+    #     'NewConfirmed INT',
+    #     'TotalConfirmed INT',
+    #     'NewDeaths INT',
+    #     'TotalDeaths INT',
+    #     'NewRecovered INT',
+    #     'TotalRecovered INT'
+    # )
 
     # conn.delete('Countries', "TRUE")
     # conn.drop_table('Global')
