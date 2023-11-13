@@ -13,7 +13,7 @@ schema = StructType([
 # spark = SparkSession.builder.appName("Covid19").getOrCreate()
 
 def transform_data(data: dict) -> dict:
-    global spark
+    # global spark
     transformed_data = []
     for country_data in data['Countries']:
         transformed_data.append({
