@@ -1,14 +1,14 @@
 # from pyspark.sql import SparkSession
-from pyspark.sql.types import StructType, StructField, StringType, IntegerType
+# from pyspark.sql.types import StructType, StructField, StringType, IntegerType
 from lib.kafka_json import KafkaReceiver, KafkaSender
 
-schema = StructType([
-    StructField('Country', StringType(), True),
-    StructField('CountryCode', StringType(), False),
-    StructField('NewConfirmed', IntegerType(), True),
-    StructField('TotalConfirmed', IntegerType(), True),
-    StructField('Date', StringType(), False)
-])
+# schema = StructType([
+#     StructField('Country', StringType(), True),
+#     StructField('CountryCode', StringType(), False),
+#     StructField('NewConfirmed', IntegerType(), True),
+#     StructField('TotalConfirmed', IntegerType(), True),
+#     StructField('Date', StringType(), False)
+# ])
 
 # spark = SparkSession.builder.appName("Covid19").getOrCreate()
 

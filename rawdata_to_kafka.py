@@ -10,7 +10,7 @@ def get_data(url):
         return None
 
 def send_data():
-    API_URL = "http://127.0.0.1:8000/"
+    API_URL = "http://localhost:8000/"
     producer = KafkaSender('localhost:9092')
 
     data = get_data(API_URL)
@@ -19,14 +19,16 @@ def send_data():
 
 if __name__ == '__main__':
 
-    import threading
+    # import threading
 
-    def set_interval(func, sec):
-        def func_wrapper():
-            set_interval(func, sec)
-            func()
-        t = threading.Timer(sec, func_wrapper)
-        t.start()
-        return t
+    # def set_interval(func, sec):
+    #     def func_wrapper():
+    #         set_interval(func, sec)
+    #         func()
+    #     t = threading.Timer(sec, func_wrapper)
+    #     t.start()
+    #     return t
 
-    set_interval(send_data, 5)
+    # set_interval(send_data, 5)
+
+    send_data()
