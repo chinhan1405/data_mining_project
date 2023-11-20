@@ -19,7 +19,7 @@ def send_data():
 
 if __name__ == '__main__':
 
-    # import threading
+    import threading
 
     # def set_interval(func, sec):
     #     def func_wrapper():
