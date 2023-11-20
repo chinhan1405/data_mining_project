@@ -1,0 +1,6 @@
+1. Group by country -> avg(new confirm) (top 10)
+
+2. Biểu đồ cột top 10 quốc gia có total confirm cao nhất hiện tại
+
+3. Biểu đồ đường total confirm vs new confirm
+

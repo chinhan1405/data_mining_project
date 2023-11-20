@@ -11,7 +11,7 @@ Step 2: Create kafka-consumer that receives data and inserts them into the datab
     py kafka_to_sqlite.py
 
 Step 3: Transforming data in data-pipeline.
-    py py_spark.py
+    .\bin\spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.1 D:\Course\HK-231\Khai_pha_du_lieu\Assignment\covid19_datapipeline\data_pipeline\py_spark.py
 
 Step 3: Fetch data from the api and send to kafka every 5 seconds (run this in a different terminal)
     py rawdata_to_kafka.py

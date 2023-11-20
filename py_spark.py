@@ -12,25 +12,29 @@ schema = StructType([
 spark = SparkSession.builder.appName("Covid19")\
     .getOrCreate()
 
+def parse_data_from_kafka_message(sdf, schema):
+    from pyspark.sql.functions import split
+    assert sdf.isStreaming == True, "DataFrame doesn't receive streaming data"
+    col = split(sdf['value'], ',') #split attributes to nested array in one Column
+    #now expand col to multiple top-level columns
+    for idx, field in enumerate(schema): 
+        sdf  = sdf.withColumn(field.name, col.getItem(idx).cast(field.dataType))
+    return sdf.select([field.name for field in schema])
+
 def transform_data() -> dict:
-    # global spark
-    # transformed_data = []
-    # for country_data in data['Countries']:
-    #     transformed_data.append({
-    #         'Country': country_data['Country'],
-    #         'CountryCode': country_data['CountryCode'],
-    #         'NewConfirmed': country_data['NewConfirmed'],
-    #         'TotalConfirmed': country_data['TotalConfirmed'],
-    #         'Date': country_data['Date']
-    #     })
-    # df = spark.createDataFrame(transformed_data, schema)
+    pass
+    
+
+if __name__ == '__main__':
     df = spark.readStream\
         .format("kafka") \
         .option("kafka.bootstrap.servers", "127.0.0.1:9092") \
         .option("subscribe", "covid19_raw_data") \
         .option("startingOffsets", "latest") \
         .load()
-    df.selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)")
+    df.selectExpr("CAST(value AS STRING)")
+    # df.printSchema()
+    # dfCSV = parse_data_from_kafka_message(dfCSV, userSchema)
     checkpointDir = "C:/checkpoint/"
     flower_agg_write_stream = df \
             .writeStream \
@@ -38,12 +42,8 @@ def transform_data() -> dict:
             .outputMode("append")\
             .option("kafka.bootstrap.servers", "127.0.0.1:9092") \
             .option("topic", "covid19_data") \
-            .trigger(processingTime="10 seconds")\
+            .trigger(processingTime="5 seconds")\
             .option("checkpointLocation", checkpointDir)\
             .start()
-    # return {"Countries" : transformed_data}
     flower_agg_write_stream.awaitTermination()
-
-if __name__ == '__main__':
-    transform_data()
 
