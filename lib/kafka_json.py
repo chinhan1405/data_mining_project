@@ -14,6 +14,15 @@ class KafkaSender(KafkaProducer):
             print('Exception in publishing message.')
             print(str(ex))
 
+    def send_data_string(self, topic_name: str, data: str):
+        try:
+            self.send(topic_name, data.encode('utf-8'))
+            self.flush()
+            print('Message published successfully.')
+        except Exception as ex:
+            print('Exception in publishing message.')
+            print(str(ex))
+
 
 class KafkaReceiver(KafkaConsumer):
     def __init__(self, server: str, topic: str):

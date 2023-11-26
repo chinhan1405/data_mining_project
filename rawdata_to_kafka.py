@@ -2,6 +2,7 @@ import requests
 import json
 from lib.kafka_json import KafkaSender
 
+
 def get_data(url):
     response = requests.get(url)
     if response.status_code == 200:
@@ -14,7 +15,8 @@ def send_data():
     producer = KafkaSender('localhost:9092')
 
     data = get_data(API_URL)
-    producer.send_data('covid19_raw_data', data)
+    for dataframe in data['Countries']:
+        producer.send_data('covid19_raw_data', dataframe)
 
 
 if __name__ == '__main__':

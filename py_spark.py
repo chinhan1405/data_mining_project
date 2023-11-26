@@ -1,5 +1,7 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.types import StructType, StructField, StringType, IntegerType
+from pyspark.sql.functions import from_json, to_json, struct
+
 
 schema = StructType([
     StructField('Country', StringType(), True),
@@ -9,20 +11,15 @@ schema = StructType([
     StructField('Date', StringType(), False)
 ])
 
+def parse_data_from_kafka_message(sdf, schema):
+    sdf = sdf.selectExpr("CAST(value AS STRING)")
+    sdf = sdf.select(from_json("value", schema).alias("value"))
+    return sdf.select("value.*")
+
+
 spark = SparkSession.builder.appName("Covid19")\
     .getOrCreate()
 
-def parse_data_from_kafka_message(sdf, schema):
-    from pyspark.sql.functions import split
-    assert sdf.isStreaming == True, "DataFrame doesn't receive streaming data"
-    col = split(sdf['value'], ',') #split attributes to nested array in one Column
-    #now expand col to multiple top-level columns
-    for idx, field in enumerate(schema): 
-        sdf  = sdf.withColumn(field.name, col.getItem(idx).cast(field.dataType))
-    return sdf.select([field.name for field in schema])
-
-def transform_data() -> dict:
-    pass
     
 
 if __name__ == '__main__':
@@ -32,18 +29,30 @@ if __name__ == '__main__':
         .option("subscribe", "covid19_raw_data") \
         .option("startingOffsets", "latest") \
         .load()
-    df.selectExpr("CAST(value AS STRING)")
-    # df.printSchema()
-    # dfCSV = parse_data_from_kafka_message(dfCSV, userSchema)
+
+    new_df = parse_data_from_kafka_message(df, schema)
+
+    
+    json_df = new_df.select(to_json(struct("*")).alias("value"))
+
     checkpointDir = "C:/checkpoint/"
-    flower_agg_write_stream = df \
-            .writeStream \
-            .format("kafka") \
-            .outputMode("append")\
-            .option("kafka.bootstrap.servers", "127.0.0.1:9092") \
-            .option("topic", "covid19_data") \
-            .trigger(processingTime="5 seconds")\
-            .option("checkpointLocation", checkpointDir)\
-            .start()
-    flower_agg_write_stream.awaitTermination()
+    json_df \
+        .writeStream \
+        .format("kafka") \
+        .outputMode("append")\
+        .option("kafka.bootstrap.servers", "127.0.0.1:9092") \
+        .option("topic", "covid19_data") \
+        .trigger(processingTime="5 seconds")\
+        .option("checkpointLocation", checkpointDir)\
+        .start() \
+        .awaitTermination()
+
+    # json_df.writeStream \
+    #     .format("console") \
+    #     .outputMode("append") \
+    #     .trigger(processingTime="5 seconds")\
+    #     .start() \
+    #     .awaitTermination()
+    
+
 
