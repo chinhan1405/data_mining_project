@@ -46,4 +46,4 @@ Step 6: Start the API server for querying data from the database
     py -m uvicorn server:app
 
 
-Step 6: Visualize
+Step 7: Visualize
