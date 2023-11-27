@@ -35,6 +35,7 @@ class DataManager:
             country_data['Date'] = self.date.strftime('%Y-%m-%d')
         for attr in self.NUMERICAL_ATTRS:
             self.global_data[attr] = sum([country_data[attr] for country_data in self.countries_data])
+            self.global_data['Date'] = self.date.strftime('%Y-%m-%d')
         self.date += timedelta(days=1)
         print('Data updated')
 

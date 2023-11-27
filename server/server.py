@@ -19,4 +19,4 @@ def set_interval(func, sec):
     t.start()
     return t
 
-set_interval(data.pseudo_update, 5)
+set_interval(data.pseudo_update, 10)
